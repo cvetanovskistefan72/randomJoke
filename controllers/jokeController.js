@@ -4,7 +4,7 @@ const AppPostError = require("../utils/AppPostError");
 const getRandomJoke = async (req, res) => {
   try {
     const jokes = await Joke.find();
-    var joke = jokes[Math.round(Math.random() * jokes.length)];
+    var joke = jokes[Math.round(Math.random() * (jokes.length - 1))];
     res.status(200).json({
       status: 200,
       data: {
