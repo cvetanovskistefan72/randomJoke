@@ -64,10 +64,14 @@ const postJoke = async (req, res) => {
         joke: newJoke,
       },
     });
-  } catch ({ errors }) {
+  } catch (err) {
+    if (err.message.includes("duplicate"))
+      err.message = "Внесовте постоечки наслов";
     res.status(400).json({
       status: "fail",
-      message: new AppPostError(errors).getObjectErrors(),
+      message:
+        (err.errors && new AppPostError(err.errors).getObjectErrors()) ||
+        err.message,
     });
   }
 };
@@ -79,16 +83,47 @@ const approveJoke = async (req, res) => {
       runValidators: true,
     });
 
+    if (!joke) throw new Error("Не постои");
+
     res.status(200).json({
       status: "success",
       data: {
         joke,
       },
     });
-  } catch ({ errors }) {
+  } catch (err) {
+    if (err.message.includes("Cast to Object failed")) {
+    }
+    err.message = "Не постои";
     res.status(400).json({
       status: "fail",
-      message: new AppPostError(errors).getObjectErrors(),
+      message:
+        (err.errors && new AppPostError(err.errors).getObjectErrors()) ||
+        err.message,
+    });
+  }
+};
+const removeJoke = async (req, res) => {
+  try {
+    const joke = await Joke.findByIdAndDelete(req.params.id);
+    
+    if (!joke) throw new Error("Не постои");
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        message: `Joke ${req.params.id} deleted!`,
+      },
+    });
+  } catch (err) {
+    if (err.message.includes("Cast to Object failed")) {
+    }
+    err.message = "Не постои";
+    res.status(400).json({
+      status: "fail",
+      message:
+        (err.errors && new AppPostError(err.errors).getObjectErrors()) ||
+        err.message,
     });
   }
 };
@@ -99,4 +134,5 @@ module.exports = {
   postJoke,
   approveJoke,
   getRandomJoke,
+  removeJoke,
 };

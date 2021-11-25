@@ -5,6 +5,7 @@ const {
   postJoke,
   approveJoke,
   getRandomJoke,
+  removeJoke,
 } = require("../controllers/jokeController");
 const { protectRoute } = require("../controllers/userController");
 
@@ -19,6 +20,9 @@ router.route("/approved").get(protectRoute, getApprovedJokes);
 
 router.route("/randomJoke").get(getRandomJoke);
 
-router.route("/:id").patch(protectRoute, approveJoke);
+router
+  .route("/:id")
+  .patch(protectRoute, approveJoke)
+  .delete(protectRoute, removeJoke);
 
 module.exports = router;
