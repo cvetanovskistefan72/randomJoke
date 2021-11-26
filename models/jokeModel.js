@@ -1,4 +1,4 @@
-const defaultTypes = require('../config/config')
+const defaultTypes = require("../config/config");
 const mongoose = require("mongoose");
 
 // const validator = require('validator');
@@ -23,6 +23,12 @@ const jokesSchema = new mongoose.Schema(
       required: [true, "Тип е задолжително"],
     },
     approved: Boolean,
+    name: {
+      type: String,
+      required: [true, "Внесете име и презиме"],
+    },
+    date: Date,
+    
   },
   {
     toJSON: { virtuals: true },
@@ -32,6 +38,10 @@ const jokesSchema = new mongoose.Schema(
 
 jokesSchema.virtual("color").get(function() {
   return defaultTypes.get(this.type);
+});
+jokesSchema.pre("save", async function(err, doc, next) {
+  this.date = new Date().toISOString();
+  next();
 });
 
 const Joke = mongoose.model("Joke", jokesSchema);
