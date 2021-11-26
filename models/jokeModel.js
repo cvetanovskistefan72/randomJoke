@@ -8,7 +8,6 @@ const jokesSchema = new mongoose.Schema(
     title: {
       type: String,
       required: [true, "Насловот е задолжителен"],
-      unique: true,
       trim: true,
       maxLength: [20, "Насловот не смее да има повеќе од 20 карактери"],
     },
