@@ -8,5 +8,4 @@ defaultTypes
   .set("Златна риба", "#CCA43d")
   .set("Си биле...", "#145a32")
   .set("Разно", "#17202a");
-
 module.exports = defaultTypes;
